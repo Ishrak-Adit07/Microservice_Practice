@@ -4,6 +4,14 @@ const app = express();
 // For parsing json
 app.use(express.json());
 
+// For cors
+import cors from 'cors';
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
+}));
+
 import mongoose from "mongoose";
 import { mongodbURL } from "./config.js";
 

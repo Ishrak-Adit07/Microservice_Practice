@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../controllers/user.controllers";
+import { loginUser } from "../../controllers/auth.controllers.js";
 import { UserContext } from "../../contexts/UserContext";
 import Alert from "../../messages/Alert";
 
@@ -34,6 +34,9 @@ const Login = () => {
           name,
           posts: [],
         });
+
+        localStorage.setItem("name", name);
+        localStorage.setItem("webToken", loginResponse.webToken);
 
         navigate("/dashboard");
         setError("");

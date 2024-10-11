@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
+import Navbar from "../sections/major_sections/Navbar";
 
 const Layout = () => {
   const { user, setUser } = useContext(UserContext);
-  console.log(user);
+
+  const scrollToAboutMe = useRef(null);
+  const scrollToProjects = useRef(null);
+  const scrollToContact = useRef(null);
 
   const navigate = useNavigate();
 
@@ -25,7 +29,7 @@ const Layout = () => {
 
   return (
     <>
-      <header className="bg-indigo-500 text-white">
+      {false && <header className="bg-indigo-500 text-white">
         <nav className="flex items-center justify-between p-4">
           <Link
             title="Home"
@@ -61,9 +65,15 @@ const Layout = () => {
             </div>
           )}
         </nav>
-      </header>
+      </header>}
 
-      <main className="p-4 items-center">
+      <Navbar
+        scrollToAboutMe={scrollToAboutMe}
+        scrollToProjects={scrollToProjects}
+        scrollToContact={scrollToContact}
+      />
+
+      <main className="pt-20 items-center w-full h-full">
         <Outlet />
       </main>
     </>

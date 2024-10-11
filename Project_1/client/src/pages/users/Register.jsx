@@ -2,7 +2,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
-import { registerUser } from "../../controllers/user.controllers";
+import { registerUser } from "../../controllers/auth.controllers.js";
 import Alert from "../../messages/Alert";
 
 const Register = () => {

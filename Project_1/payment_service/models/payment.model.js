@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema(
+const paymentSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
     },
-    password: {
-      type: String,
+    payment: {
+      type: Number,
     },
   },
   {
@@ -15,4 +15,4 @@ const userSchema = mongoose.Schema(
   }
 );
 
-export const User = mongoose.model("User", userSchema);
+export const Payment = mongoose.model("Payment", paymentSchema);

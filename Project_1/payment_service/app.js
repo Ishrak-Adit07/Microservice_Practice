@@ -20,8 +20,8 @@ mongoose
   });
 
 //Importing the routes
-import userRoute from "./routes/user.route.js";
-app.use("/api/user", userRoute);
+import paymentRoute from "./routes/payment.route.js";
+app.use("/api/payment", paymentRoute);
 
 //Default URL
 app.use("/", (req, res) => {

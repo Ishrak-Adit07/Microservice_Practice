@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
     }
 
     const webToken = createToken(user._id);
-    return res.status(200).send({ name, webToken });
+    return res.status(201).send({ name, webToken });
   } catch (e) {
     console.error(e);
     return res.status(500).send({ error: e.message });

@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 
+import MakeDownload from "../../sections/download_sections/MakeDownload";
+import MakePayment from "../../sections/payment_sections/MakePayment";
+
 const Dashboard = () => {
   return (
     <section className="card">
@@ -9,6 +12,8 @@ const Dashboard = () => {
         {
           <div>
             <h1 className="text-4xl font-bold text-center">This is user dashboard</h1>
+            <MakePayment />
+            <MakeDownload />
           </div>
         }
       </div>

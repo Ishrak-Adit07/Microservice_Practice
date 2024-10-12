@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
+import MakePayment from "../sections/payment_sections/MakePayment";
+import MakeDownload from "../sections/download_sections/MakeDownload";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -19,7 +21,10 @@ const Home = () => {
           <i className="fa-solid fa-spinner animate-spin text-3xl text-center-block"></i>
         )}
 
-        {!loading && <h1 className="text-center text-2xl text-blue-700">Winter is coming</h1>}
+        {!loading && 
+          <div>
+            <h1 className="text-center text-2xl text-blue-700">Winter is coming</h1>
+          </div>}
       </div>
     </section>
   );

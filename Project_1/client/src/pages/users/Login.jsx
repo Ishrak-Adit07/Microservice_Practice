@@ -23,7 +23,6 @@ const Login = () => {
   // Handle Log in
   const handleLogin = async (e) => {
     e.preventDefault();
-    //console.log(email, password);
 
     try {
       console.log(name, password);
@@ -36,7 +35,7 @@ const Login = () => {
         });
 
         localStorage.setItem("name", name);
-        localStorage.setItem("webToken", loginResponse.webToken);
+        localStorage.setItem("webToken", loginResponseData.webToken);
 
         navigate("/dashboard");
         setError("");

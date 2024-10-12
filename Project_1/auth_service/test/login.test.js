@@ -2,7 +2,6 @@ import request from "supertest";
 import app from "../app.js";
 import mongoose from "mongoose";
 import { mongodbURL } from "../config.js";
-import { User } from "../models/user.model.js";
 
 describe("API Endpoint Tests", () => {
   beforeAll(async () => {
@@ -20,7 +19,7 @@ describe("API Endpoint Tests", () => {
 
     const response = await postLoginRequest(validUser);
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty("name", validUser.name);
     expect(response.body).toHaveProperty("webToken");
   });
@@ -51,7 +50,7 @@ describe("API Endpoint Tests", () => {
 
   it("should return 401 error for POST /api/user/login with invalid password", async () => {
     const invalidUser = {
-      name: "JohnDoe",
+      name: "Jon Snow",
       password: "wrongpassword",
     };
 

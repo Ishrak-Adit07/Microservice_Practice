@@ -12,9 +12,10 @@ const auth = async (req, res, next) => {
   try {
     const { _id } = jwt.verify(token, process.env.SECRET_WEB_KEY);
 
-    const response = await fetch(`http://localhost:8000/api/user/${_id}`);
+    const response = await fetch(`http://localhost:8000/api/user/validate/${_id}`);
+    
     if (!response.ok) {
-      return res.status(404).send("User not found");
+      return res.status(401).send({ error: "Unauthorized" });
     }
 
     const user = await response.json();
@@ -22,7 +23,7 @@ const auth = async (req, res, next) => {
 
     next();
   } catch (e) {
-    console.error(e);
+    // console.error(e);
     return res.status(401).send({ error: "Unauthorized" });
   }
 };

@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
 
     return res.status(201).send({ name, webToken });
   } catch (e) {
-    console.error(e);
+    // console.error(e);
     return res.status(500).send({ error: e.message });
   }
 };
@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
     const webToken = createToken(user._id);
     return res.status(201).send({ name, webToken });
   } catch (e) {
-    console.error(e);
+    // console.error(e);
     return res.status(500).send({ error: e.message });
   }
 };
@@ -71,9 +71,25 @@ const getUserByID = async (req, res) => {
 
     return res.status(200).send(user);
   } catch (e) {
-    console.error(e);
+    // console.error(e);
     return res.status(500).send({ error: e.message });
   }
 };
 
-export { registerUser, loginUser, getUserByID };
+const validateUserByID = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id).select("_id");
+    if (!user) {
+      return res.status(404).send({ error: "No such id found" });
+    }
+
+    return res.status(200).send({user});
+  } catch (e) {
+    // console.error(e);
+    return res.status(500).send({ error: e.message });
+  }
+};
+
+export { registerUser, loginUser, getUserByID, validateUserByID };

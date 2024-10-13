@@ -29,11 +29,8 @@ mongoose
     console.log(err);
   });
 
-connectToBroker();
-
 //Importing the routes
 import userRoute from "./routes/user.route.js";
-import { connectToBroker } from "./event_handlers/rmq.publisher.js";
 app.use("/api/user", userRoute);
 
 //Default URL

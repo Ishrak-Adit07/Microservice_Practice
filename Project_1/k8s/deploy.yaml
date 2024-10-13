@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: ishrakadit07/micro-auth
+          image: ishrakadit07/project_1-auth-service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
@@ -83,7 +83,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: ishrakadit07/micro-payment
+          image: ishrakadit07/project_1-payment-service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8001
@@ -146,7 +146,7 @@ spec:
     spec:
       containers:
         - name: download-service
-          image: ishrakadit07/micro-download
+          image: ishrakadit07/project_1-download-service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8002
@@ -209,17 +209,17 @@ spec:
     spec:
       containers:
         - name: client
-          image: ishrakadit07/micro-client
+          image: ishrakadit07/project_1-web
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5173
           env:
             - name: VITE_AUTH_API_URL
-              value: http://auth-service:8000
+              value: http://137.184.248.83:8000
             - name: VITE_PAYMENT_API_URL
-              value: http://payment-service:8001
+              value: http://137.184.251.33:8001
             - name: VITE_DOWNLOAD_API_URL
-              value: http://download-service:8002
+              value: http://144.126.242.141:8002
           resources:
             requests:
               cpu: "200m"
@@ -285,16 +285,16 @@ spec:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
 ---
-# Horizontal Pod Autoscaler for web
+# Horizontal Pod Autoscaler for client
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: web-hpa
+  name: client-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: web-deploy
+    name: client-deploy
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80

@@ -1,0 +1,2 @@
+docker exec -it e5f7d0507793 /bin/bash
+rabbitmqctl add_user ishrakadit07 swish3Rmq

@@ -14,7 +14,6 @@ const auth = async (req, res, next) => {
 
     const authServiceUrl = process.env.AUTH_SERVICE_URL || "http://localhost:8000"; // Fallback for local dev
 
-    console.log(authServiceUrl);
     const response = await fetch(`${authServiceUrl}/api/user/validate/${_id}`);
 
     if (!response.ok) {

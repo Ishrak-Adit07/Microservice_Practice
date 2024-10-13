@@ -12,8 +12,8 @@ const auth = async (req, res, next) => {
   try {
     const { _id } = jwt.verify(token, process.env.SECRET_WEB_KEY);
 
-    const authServiceUrl =
-      process.env.AUTH_SERVICE_URL || "http://localhost:8000"; // Fallback for local dev
+    const authServiceUrl = process.env.AUTH_SERVICE_URL || "http://localhost:8000"; // Fallback for local dev
+
     const response = await fetch(`${authServiceUrl}/api/user/validate/${_id}`);
 
     if (!response.ok) {

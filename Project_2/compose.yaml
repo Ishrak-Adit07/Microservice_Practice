@@ -33,8 +33,8 @@ services:
     environment:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
-      PAYMENT_SERVICE_URL: http://payment-service:8000
-      DOWNLOAD_SERVICE_URL: http://download-service:8000
+      PAYMENT_SERVICE_URL: http://payment-service:8001
+      DOWNLOAD_SERVICE_URL: http://download-service:8002
 
     develop:
       watch:
@@ -55,8 +55,8 @@ services:
     environment:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
-      PAYMENT_SERVICE_URL: http://payment-service:8000
-      DOWNLOAD_SERVICE_URL: http://download-service:8000
+      PAYMENT_SERVICE_URL: http://payment-service:8001
+      DOWNLOAD_SERVICE_URL: http://download-service:8002
 
     develop:
       watch:
@@ -77,8 +77,8 @@ services:
     environment:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
-      PAYMENT_SERVICE_URL: http://payment-service:8000
-      DOWNLOAD_SERVICE_URL: http://download-service:8000
+      PAYMENT_SERVICE_URL: http://payment-service:8001
+      DOWNLOAD_SERVICE_URL: http://download-service:8002
 
     develop:
       watch:

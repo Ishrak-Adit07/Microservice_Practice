@@ -27,8 +27,11 @@ mongoose
     console.log(err);
   });
 
+connectToBroker();
+
 //Importing the routes
 import paymentRoute from "./routes/payment.route.js";
+import { connectToBroker } from "./event_handlers/rmq.consumer.js";
 app.use("/api/payment", paymentRoute);
 
 //Default URL

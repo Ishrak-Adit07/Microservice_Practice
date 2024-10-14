@@ -1,0 +1,108 @@
+services:
+  web:
+    depends_on:
+      - auth-service
+      - payment-service
+      - download-service
+    build: ./client
+    ports: 
+      - 5173:5173
+    environment:
+      VITE_AUTH_API_URL: http://localhost:8000
+      VITE_PAYMENT_API_URL: http://localhost:8001
+      VITE_DOWNLOAD_API_URL: http://localhost:8002
+
+    develop:
+      watch:
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client/package-lock.json
+          action: rebuild
+        - path: ./client
+          target: /app
+          action: sync
+          
+  auth-service:
+    depends_on:
+      - db 
+      - rabbitmq 
+    build: ./auth_service
+    ports: 
+      - 8000:8000
+    environment:
+      DB_URL: mongodb://db/dfsa
+      PAYMENT_SERVICE_URL: http://payment-service:8001
+      DOWNLOAD_SERVICE_URL: http://download-service:8002
+
+    develop:
+      watch:
+        - path: ./auth_service/package.json
+          action: rebuild
+        - path: ./auth_service/package-lock.json
+          action: rebuild
+        - path: ./auth_service
+          target: /app
+          action: sync
+
+  payment-service:
+    depends_on:
+      - db
+      - rabbitmq
+    build: ./payment_service
+    ports: 
+      - 8001:8001
+    environment:
+      DB_URL: mongodb://db/dfsa
+      AUTH_SERVICE_URL: http://auth-service:8000
+      DOWNLOAD_SERVICE_URL: http://download-service:8002
+
+    develop:
+      watch:
+        - path: ./payment_service/package.json
+          action: rebuild
+        - path: ./payment_service/package-lock.json
+          action: rebuild
+        - path: ./payment_service
+          target: /app
+          action: sync
+
+  download-service:
+    depends_on:
+      - db
+      - rabbitmq
+    build: ./download_service
+    ports: 
+      - 8002:8002
+    environment:
+      DB_URL: mongodb://db/dfsa
+      AUTH_SERVICE_URL: http://auth-service:8000
+      PAYMENT_SERVICE_URL: http://payment-service:8001
+
+    develop:
+      watch:
+        - path: ./download_service/package.json
+          action: rebuild
+        - path: ./download_service/package-lock.json
+          action: rebuild
+        - path: ./download_service
+          target: /app
+          action: sync
+
+  db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - dfsa:/data/db
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: user_pass
+
+volumes:
+  dfsa:

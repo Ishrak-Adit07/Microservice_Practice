@@ -27,6 +27,10 @@ mongoose
     console.log(err);
   });
 
+import { subscriber } from "./event_handlers/redis.sub.js";
+console.log("Subscribing to auth channel");
+subscriber.subscribe('auth_channel');
+
 //Importing the routes
 import paymentRoute from "./routes/payment.route.js";
 app.use("/api/payment", paymentRoute);

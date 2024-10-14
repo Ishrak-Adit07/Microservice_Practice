@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
+import { publisher } from "../../download_service/event_handlers/redis.pub.js";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
@@ -53,6 +54,8 @@ const loginUser = async (req, res) => {
     }
 
     const webToken = createToken(user._id);
+
+    publisher.publish('channel', `${name} is logged in`);
 
     return res.status(201).send({ name, webToken });
   } catch (e) {

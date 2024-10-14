@@ -5,12 +5,14 @@ const app = express();
 app.use(express.json());
 
 // For cors
-import cors from 'cors';
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+import cors from "cors";
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 import mongoose from "mongoose";
 import { mongodbURL } from "./config.js";
@@ -27,6 +29,10 @@ mongoose
     console.log(err);
   });
 
+import { subscriber } from "./event_handlers/redis.sub.js";
+console.log("Subscribing to auth channel");
+subscriber.subscribe("auth_channel");
+
 //Importing the routes
 import downloadRoute from "./routes/download.route.js";
 app.use("/api/download", downloadRoute);
@@ -37,4 +43,3 @@ app.use("/", (req, res) => {
 });
 
 export default app;
- 

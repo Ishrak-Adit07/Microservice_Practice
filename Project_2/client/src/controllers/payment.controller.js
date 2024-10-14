@@ -9,12 +9,14 @@ const validateFields = (fields) => {
   const makePayment = async (name, payment) => {
   
     validateFields([name, payment]);
+    const token = localStorage.getItem("webToken");
   
     try {
       const response = await fetch(`${import.meta.env.VITE_PAYMENT_API_URL}/api/payment/make`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ name, payment }),
       });

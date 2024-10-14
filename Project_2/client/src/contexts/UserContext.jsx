@@ -5,7 +5,7 @@ export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState({
-    name: localStorage.getItem("name"),
+    name: localStorage.getItem(null),
     posts: [],
   });
 

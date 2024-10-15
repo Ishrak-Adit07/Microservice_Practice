@@ -4,11 +4,11 @@ kind: ConfigMap
 metadata:
   name: api-urls
 data:
-  VITE_AUTH_API_URL: "http://139.59.193.232:8000"
-  VITE_PAYMENT_API_URL: "http://146.190.4.175:8001"
-  VITE_DOWNLOAD_API_URL: "http://146.190.201.180:8002"
-  REDIS_HOST: redis
-  REDIS_PORT: 6379
+  VITE_AUTH_API_URL: "http://146.190.201.126:8000"
+  VITE_PAYMENT_API_URL: "http://139.59.219.218:8001"
+  VITE_DOWNLOAD_API_URL: "http://167.99.31.54:8002"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
 ---
 # auth-service Deployment
 apiVersion: apps/v1

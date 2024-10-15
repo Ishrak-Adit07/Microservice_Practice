@@ -43,6 +43,9 @@
 ### 1. MongoDB Atlas
 - MongoDB Atlas is used for database management, with automatic handling of sharding and scaling for efficient data distribution.
 
+### 2. Redis Caching
+- Redis is deployed with k8s and used for caching in the backend services.
+
 # Features Completed, Pending Testing
 
 ## GitHub Actions

@@ -7,6 +7,8 @@ data:
   VITE_AUTH_API_URL: "http://139.59.193.232:8000"
   VITE_PAYMENT_API_URL: "http://146.190.4.175:8001"
   VITE_DOWNLOAD_API_URL: "http://146.190.201.180:8002"
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
 ---
 # auth-service Deployment
 apiVersion: apps/v1
@@ -49,6 +51,16 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_PORT
           resources:
             requests:
               cpu: "200m"
@@ -117,6 +129,16 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_PORT
           resources:
             requests:
               cpu: "200m"
@@ -185,6 +207,16 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_PORT
           resources:
             requests:
               cpu: "200m"

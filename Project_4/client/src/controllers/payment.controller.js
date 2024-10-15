@@ -15,8 +15,8 @@ const validateFields = (fields) => {
       const response = await fetch(`${import.meta.env.VITE_PAYMENT_API_URL}/api/payment/make`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ name, payment }),
       });

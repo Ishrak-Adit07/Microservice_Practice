@@ -15,8 +15,8 @@ const validateFields = (fields) => {
       const response = await fetch(`${import.meta.env.VITE_DOWNLOAD_API_URL}/api/download/make`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ name }),
       });

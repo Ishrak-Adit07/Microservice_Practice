@@ -18,7 +18,7 @@ const registerUser = async (name, password, confirmPassword) => {
     const registerResponse = await fetch(`${import.meta.env.VITE_AUTH_API_URL}/api/user/register`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name, password }),
     });

@@ -33,5 +33,5 @@
 ### 1. Microservices Architecture
 ### 2. Inter-Service Communication with HTTP requests throught middlewares
 ### 3. Database cached with Redis
-### 4. Database sharding with Redis
+### 4. Database cache sharding with Redis
 ### 5. Containerized and deployed on cloud

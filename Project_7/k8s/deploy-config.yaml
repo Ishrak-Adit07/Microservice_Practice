@@ -1,0 +1,9 @@
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-urls
+data:
+  VITE_AUTH_API_URL: "http://<AUTH_SERVICE_LOAD_BALANCER_IP>:8000"
+  VITE_PAYMENT_API_URL: "http://<PAYMENT_SERVICE_LOAD_BALANCER_IP>:8001"
+  VITE_DOWNLOAD_API_URL: "http://<DOWNLOAD_SERVICE_LOAD_BALANCER_IP>:8002"

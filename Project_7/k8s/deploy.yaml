@@ -4,9 +4,9 @@ kind: ConfigMap
 metadata:
   name: api-urls
 data:
-  VITE_AUTH_API_URL: "http://146.190.201.126:8000"
-  VITE_PAYMENT_API_URL: "http://139.59.219.218:8001"
-  VITE_DOWNLOAD_API_URL: "http://167.99.31.54:8002"
+  VITE_AUTH_API_URL: "http://district12.xyz/api/user"
+  VITE_PAYMENT_API_URL: "http://district12.xyz/api/payment"
+  VITE_DOWNLOAD_API_URL: "http://district12.xyz/api/download"
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
 ---

@@ -35,3 +35,11 @@
 ### 3. Database cached with Redis
 ### 4. Database cache sharding with Redis
 ### 5. Containerized and deployed on cloud
+
+# Project 7
+
+### 1. Microservices Architecture
+### 2. Inter-Service Communication with HTTP requests throught middlewares
+### 3. Database cached with Redis
+### 4. Containerized and deployable on cloud without ingress, services changed to ClusterIP
+### 5. Ingress files configured, not tested

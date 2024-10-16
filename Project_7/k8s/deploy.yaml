@@ -81,7 +81,7 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 8000
-  type: LoadBalancer
+  type: ClusterIP
 ---
 # payment-service Deployment
 apiVersion: apps/v1
@@ -159,7 +159,7 @@ spec:
     - protocol: TCP
       port: 8001
       targetPort: 8001
-  type: LoadBalancer
+  type: ClusterIP
 ---
 # download-service Deployment
 apiVersion: apps/v1
@@ -237,7 +237,7 @@ spec:
     - protocol: TCP
       port: 8002
       targetPort: 8002
-  type: LoadBalancer
+  type: ClusterIP
 ---
 # client Deployment
 apiVersion: apps/v1
@@ -295,12 +295,11 @@ kind: Service
 metadata:
   name: client-service
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 5173
       targetPort: 5173
       protocol: TCP
-      nodePort: 30001
   selector:
     app: client
 --- 

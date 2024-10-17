@@ -46,6 +46,17 @@
 ### 2. Redis Caching
 - Redis is deployed with k8s and used for caching in the backend services.
 
+## Cloud Deployment
+
+### 1. Domain Registration and Configuration
+- Registered and configured the domain district12.xyz through NameCheap for seamless access to the application.
+
+### 2. Deployment with Ingress and Kong
+- Deployed full website using an Ingress controller with Kong and Helm, managing routing for multiple subdomains effectively.
+
+### 3. Preflight and CORS Configuration
+- Implemented CORS policies to properly handle preflight requests, ensuring secure communication between the client and backend services.
+
 # Features Completed, Pending Testing
 
 ## GitHub Actions

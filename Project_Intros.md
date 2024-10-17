@@ -43,4 +43,5 @@
 ### 3. Database cached with Redis
 ### 4. Containerized and deployable on cloud without ingress, services changed to ClusterIP
 ### 5. Ingress files configured
-### 6. Issue with inter-service communication
+### 6. Fully deployed to cloud, configured and tested
+### 7. Preflight requests handled

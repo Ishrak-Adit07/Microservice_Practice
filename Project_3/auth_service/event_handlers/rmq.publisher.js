@@ -2,7 +2,9 @@ import amqp from "amqplib/callback_api.js";
 let channel = null;
 
 const connectToBroker = () => {
-    amqp.connect("amqp://localhost", (error0, connection) => {
+    const rabbitMqUrl = process.env.RABBITMQ_URL || "amqp://localhost";
+    
+    amqp.connect(rabbitMqUrl, (error0, connection) => {
         if (error0) {
             throw error0;
         }

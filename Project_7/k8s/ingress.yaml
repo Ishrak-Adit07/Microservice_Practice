@@ -3,28 +3,29 @@ kind: Ingress
 metadata:
   name: micro-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: cors
 spec:
-  ingressClassName: nginx
+  ingressClassName: kong
   rules:
     - host: district12.xyz
       http:
         paths:
-          - path: /auth/(.*)
+          - path: /auth
             pathType: Prefix
             backend:
               service:
                 name: auth-service
                 port:
                   number: 8000
-          - path: /pay/(.*)
+          - path: /pay
             pathType: Prefix
             backend:
               service:
                 name: payment-service
                 port:
                   number: 8001
-          - path: /down/(.*)
+          - path: /down
             pathType: Prefix
             backend:
               service:

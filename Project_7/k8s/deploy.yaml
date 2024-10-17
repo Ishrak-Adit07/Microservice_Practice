@@ -33,7 +33,7 @@ spec:
       containers:
         - name: auth-service
           image: ishrakadit07/auth_service
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
@@ -106,7 +106,7 @@ spec:
       containers:
         - name: payment-service
           image: ishrakadit07/payment_service
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8001
           env:
@@ -184,7 +184,7 @@ spec:
       containers:
         - name: download-service
           image: ishrakadit07/download_service
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8002
           env:
@@ -262,7 +262,7 @@ spec:
       containers:
         - name: client
           image: ishrakadit07/project_web
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 5173
           env:

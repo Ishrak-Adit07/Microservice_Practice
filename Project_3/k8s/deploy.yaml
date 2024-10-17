@@ -9,6 +9,8 @@ data:
   VITE_DOWNLOAD_API_URL: "http://167.99.31.54:8002"
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
+  RABBITMQ_URL: "rabbitmq:5672"
+  RABBITMQ_PORT: "5672"
 ---
 # auth-service Deployment
 apiVersion: apps/v1
@@ -61,6 +63,16 @@ spec:
                 configMapKeyRef:
                   name: api-urls
                   key: REDIS_PORT
+            - name: RABBITMQ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: RABBITMQ_URL
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: RABBITMQ_PORT
           resources:
             requests:
               cpu: "200m"
@@ -139,6 +151,16 @@ spec:
                 configMapKeyRef:
                   name: api-urls
                   key: REDIS_PORT
+            - name: RABBITMQ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: RABBITMQ_URL
+            - name: RABBITMQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: RABBITMQ_PORT
           resources:
             requests:
               cpu: "200m"

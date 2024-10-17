@@ -25,7 +25,6 @@ services:
   auth-service:
     depends_on:
       - db 
-      - rabbitmq 
     build: ./auth_service
     ports: 
       - 8000:8000
@@ -47,7 +46,6 @@ services:
   payment-service:
     depends_on:
       - db
-      - rabbitmq
     build: ./payment_service
     ports: 
       - 8001:8001
@@ -69,7 +67,6 @@ services:
   download-service:
     depends_on:
       - db
-      - rabbitmq
     build: ./download_service
     ports: 
       - 8002:8002
@@ -94,15 +91,6 @@ services:
       - 27017:27017
     volumes:
       - dfsa:/data/db
-
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - 5672:5672
-      - 15672:15672
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: user_pass
 
 volumes:
   dfsa:

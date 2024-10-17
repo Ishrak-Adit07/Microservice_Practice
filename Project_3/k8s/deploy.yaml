@@ -1,3 +1,15 @@
+# ConfigMap for API URLs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-urls
+data:
+  VITE_AUTH_API_URL: "http://146.190.201.126:8000"
+  VITE_PAYMENT_API_URL: "http://139.59.219.218:8001"
+  VITE_DOWNLOAD_API_URL: "http://167.99.31.54:8002"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+---
 # auth-service Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -20,7 +32,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: ishrakadit07/project_1-auth-service
+          image: ishrakadit07/auth_service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
@@ -39,6 +51,16 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_PORT
           resources:
             requests:
               cpu: "200m"
@@ -83,11 +105,16 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: ishrakadit07/project_1-payment-service
+          image: ishrakadit07/payment_service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8001
           env:
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: VITE_AUTH_API_URL
             - name: MONGODB_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -102,6 +129,16 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_PORT
           resources:
             requests:
               cpu: "200m"
@@ -146,11 +183,16 @@ spec:
     spec:
       containers:
         - name: download-service
-          image: ishrakadit07/project_1-download-service
+          image: ishrakadit07/download_service
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8002
           env:
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: VITE_AUTH_API_URL
             - name: MONGODB_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -165,6 +207,16 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: REDIS_PORT
           resources:
             requests:
               cpu: "200m"
@@ -209,17 +261,26 @@ spec:
     spec:
       containers:
         - name: client
-          image: ishrakadit07/project_1-web
+          image: ishrakadit07/project_web
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5173
           env:
             - name: VITE_AUTH_API_URL
-              value: http://137.184.248.83:8000
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: VITE_AUTH_API_URL
             - name: VITE_PAYMENT_API_URL
-              value: http://137.184.251.33:8001
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: VITE_PAYMENT_API_URL
             - name: VITE_DOWNLOAD_API_URL
-              value: http://144.126.242.141:8002
+              valueFrom:
+                configMapKeyRef:
+                  name: api-urls
+                  key: VITE_DOWNLOAD_API_URL
           resources:
             requests:
               cpu: "200m"
@@ -242,7 +303,7 @@ spec:
       nodePort: 30001
   selector:
     app: client
----
+--- 
 # Horizontal Pod Autoscaler for auth-service
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

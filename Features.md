@@ -10,10 +10,6 @@
 #### HTTP Requests
 - Microservices communicate via HTTP requests when necessary to invoke operations on another service or access shared data.
 
-#### Event-Driven Communication
-- RabbitMQ is used as the message broker for event-driven communication between services.
-- Services publish and consume events to notify other services or respond to specific events asynchronously.
-
 #### Middleware Integration
 - Middleware is implemented for handling HTTP requests, event publishing, and event consumption to ensure clean separation of concerns and reusability.
 
@@ -91,8 +87,15 @@
 
 # Additional Features Planned
 
-### 1. API Gateway
+### 1. Https Protocol
+- Configure ingress to switch to https protocol from current http protocol
+
+### 2. Asynchronus Event-Driven Communication
+- RabbitMQ is used as the message broker for event-driven communication between services.
+- Services publish and consume events to notify other services or respond to specific events asynchronously.
+
+### 2. API Gateway
 - Deploy an API Gateway to centralize routing, authentication, and request management for all microservices, improving security and simplifying external access.
 
-### 2. Service Mesh
+### 3. Service Mesh
 - Implement a service mesh (e.g., Istio or Linkerd) to manage microservice-to-microservice communication, enhancing security, observability, and traffic control.

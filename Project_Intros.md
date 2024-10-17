@@ -1,7 +1,7 @@
 # Project 1
 
 ### 1. Microservices Architecture
-### No Inter-Service Communication
+### 2. No Inter-Service Communication
 
 # Project 2
 

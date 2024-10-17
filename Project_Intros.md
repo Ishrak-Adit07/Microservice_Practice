@@ -42,4 +42,5 @@
 ### 2. Inter-Service Communication with HTTP requests throught middlewares
 ### 3. Database cached with Redis
 ### 4. Containerized and deployable on cloud without ingress, services changed to ClusterIP
-### 5. Ingress files configured, not tested
+### 5. Ingress files configured
+### 6. Issue with inter-service communication

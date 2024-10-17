@@ -3,35 +3,35 @@ kind: Ingress
 metadata:
   name: micro-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
+  ingressClassName: nginx
   rules:
-    - host: district12.xyz  # Main API host
+    - host: district12.xyz
       http:
         paths:
-          - path: /api/user
+          - path: /auth/(.*)
             pathType: Prefix
             backend:
               service:
                 name: auth-service
                 port:
                   number: 8000
-          - path: /api/payment
+          - path: /pay/(.*)
             pathType: Prefix
             backend:
               service:
                 name: payment-service
                 port:
                   number: 8001
-          - path: /api/download
+          - path: /down/(.*)
             pathType: Prefix
             backend:
               service:
                 name: download-service
                 port:
                   number: 8002
-    - host: web.district12.xyz  # Client host
+    - host: web.district12.xyz
       http:
         paths:
           - path: /

@@ -5,12 +5,13 @@ const app = express();
 app.use(express.json());
 
 // For cors
-import cors from 'cors';
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+import cors from "cors";
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
+app.use(cors(corsOptions));
 
 import mongoose from "mongoose";
 import { mongodbURL } from "./config.js";
@@ -34,6 +35,15 @@ app.use("/api/payment", paymentRoute);
 //Default URL
 app.use("/", (req, res) => {
   res.send("Invalid URL!");
+});
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 export default app;

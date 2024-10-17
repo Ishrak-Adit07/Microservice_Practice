@@ -17,10 +17,10 @@
 #### Middleware Integration
 - Middleware is implemented for handling HTTP requests, event publishing, and event consumption to ensure clean separation of concerns and reusability.
 
-## DevOps and Deployment
+## Containerization and Deployment Configurations
 
 ### 1. Containerization with Docker
-- Both the client and backend microservices are containerized using Docker for consistent deployment across environments.
+- Client(front end) and backend microservices are containerized using Docker for consistent deployment across environments.
 
 ### 2. Cloud Deployment with Kubernetes
 - All services are deployed on DigitalOcean’s Kubernetes cluster.
@@ -32,11 +32,27 @@
 ### 4. Health Checks and Auto Healing
 - Regular health checks are performed on all Kubernetes pods, with automatic pod recreation in case of failure to maintain service availability.
 
-### 5. Testing
+### 5. Resource Limitation
+- Resource limitation applied for all deployments to prevent exhaustion of resources.
+
+## Testing
+
+### 1. Functional Testing
 - Comprehensive test suites are written for the microservices using Jest and Supertest, ensuring functionality and integration testing for APIs.
 
-### 6. Monitoring
+### 2. Load Testing
+- Left. Planned to do with Jmeter
+
+### 3. Performance Testing
+- Left. Planned to do with Jmeter
+
+## Monitoring
+
+### 1. Metrics Monitoring
 - Prometheus and Grafana are integrated to monitor the health and performance of the system locally, for a node server, providing insights into resource utilization and metrics.
+
+### 1. HPA Monitoring
+- HPA Configuration and status can be monitored from k8s terminal.
 
 ## Database
 
@@ -54,7 +70,7 @@
 ### 2. Deployment with Ingress and Kong
 - Deployed full website using an Ingress controller with Kong and Helm, managing routing for multiple subdomains effectively.
 
-### 3. Preflight and CORS Configuration
+### 3. Preflight Request Handling and CORS Configuration
 - Implemented CORS policies to properly handle preflight requests, ensuring secure communication between the client and backend services.
 
 # Features Completed, Pending Testing
@@ -67,13 +83,10 @@
 
 # Features Incomplete
 
-### 1. Ingress Configuration
-- Set up an Ingress controller to manage external access to services within the Kubernetes cluster.
-
-### 2. Load Testing
+### 1. Load Testing
 - Conduct load testing to validate the system’s scalability and performance under high traffic.
 
-### 3. Internal Kubernetes Database
+### 2. Internal Kubernetes Database
 - Plan to migrate MongoDB to an internal Kubernetes deployment with database sharding to demonstrate database scaling within the cluster.
 
 # Additional Features Planned

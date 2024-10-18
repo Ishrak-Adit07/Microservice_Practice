@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: micro-ingress
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: cors
+spec:
+  ingressClassName: kong
+  rules:
+    - host: district12.xyz
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 8000
+          - path: /pay
+            pathType: Prefix
+            backend:
+              service:
+                name: payment-service
+                port:
+                  number: 8001
+          - path: /down
+            pathType: Prefix
+            backend:
+              service:
+                name: download-service
+                port:
+                  number: 8002
+    - host: web.district12.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-service
+                port:
+                  number: 5173

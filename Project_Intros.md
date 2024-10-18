@@ -18,7 +18,7 @@
 # Project 4
 
 ### 1. Microservices Architecture
-### 2. Inter-Service Communication with HTTP requests throught middlewares
+### 2. Inter-Service Communication with HTTP requests through middlewares
 ### 3. Containerized and deployed on cloud
 
 # Project 5

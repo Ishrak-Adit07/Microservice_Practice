@@ -18,4 +18,20 @@ const makePayment = async (req, res) => {
   }
 };
 
-export { makePayment };
+export const createPaymentProfile = async (event) => {
+  try {
+    //const { userId, paymentAmount, paymentMethod } = event;
+
+    // Create a new payment record in the database
+    const newPayment = await Payment.create({
+      name: "Jon Snow", 
+      payment: 990
+    });
+
+    console.log("Payment profile created successfully:", newPayment);
+  } catch (error) {
+    console.error("Error creating payment profile:", error);
+  }
+};
+
+export { makePayment, createPaymentProfile };

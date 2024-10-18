@@ -1,5 +1,7 @@
 import amqp from "amqplib/callback_api.js";
 // import { createPaymentProfile } from "./controllers/payment.controller.js"; // Uncomment to handle the event
+import { Payment } from "../models/payment.model.js";
+import { createPaymentProfile } from "../controllers/payment.controller.js";
 
 let channel = null;
 let connection = null;
@@ -33,13 +35,12 @@ const connectToBroker = () => {
       // Start consuming messages from the queue
       channel.consume(
         queue,
-        (msg) => {
+        async (msg) => {
           if (msg !== null) {
             const event = JSON.parse(msg.content.toString());
             console.log("Received event:", event);
 
-            // Handle the event (implement your logic here)
-            // createPaymentProfile(event);
+            await createPaymentProfile(event);
 
             // Acknowledge that the message has been successfully processed
             channel.ack(msg);

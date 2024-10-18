@@ -24,7 +24,8 @@ services:
           
   auth-service:
     depends_on:
-      - db 
+      - db
+      - rabbitmq # Add RabbitMQ dependency
     build: ./auth_service
     ports: 
       - 8000:8000
@@ -32,6 +33,7 @@ services:
       DB_URL: mongodb://db/dfsa
       PAYMENT_SERVICE_URL: http://payment-service:8001
       DOWNLOAD_SERVICE_URL: http://download-service:8002
+      RABBITMQ_URL: amqp://rabbitmq:5672 # RabbitMQ URL for communication
 
     develop:
       watch:
@@ -46,6 +48,7 @@ services:
   payment-service:
     depends_on:
       - db
+      - rabbitmq # Add RabbitMQ dependency
     build: ./payment_service
     ports: 
       - 8001:8001
@@ -53,6 +56,7 @@ services:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
       DOWNLOAD_SERVICE_URL: http://download-service:8002
+      RABBITMQ_URL: amqp://rabbitmq:5672 # RabbitMQ URL for communication
 
     develop:
       watch:
@@ -67,6 +71,7 @@ services:
   download-service:
     depends_on:
       - db
+      - rabbitmq # Add RabbitMQ dependency
     build: ./download_service
     ports: 
       - 8002:8002
@@ -74,6 +79,7 @@ services:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
       PAYMENT_SERVICE_URL: http://payment-service:8001
+      RABBITMQ_URL: amqp://rabbitmq:5672 # RabbitMQ URL for communication
 
     develop:
       watch:
@@ -91,6 +97,15 @@ services:
       - 27017:27017
     volumes:
       - dfsa:/data/db
+
+  rabbitmq: # Add RabbitMQ service
+    image: rabbitmq:management
+    ports:
+      - 5672:5672  # Port for AMQP protocol
+      - 15672:15672  # Port for RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
 volumes:
   dfsa:

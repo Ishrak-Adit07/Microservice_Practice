@@ -1,0 +1,46 @@
+helm repo add kong https://charts.konghq.com
+helm repo update
+
+kubectl create namespace kong
+helm install kong kong/kong --namespace kong --set ingressController.installCRDs=false
+kubectl get all -n kong
+
+Edit kong:
+kubectl edit svc kong-kong-proxy -n kong
+spec:
+  type: LoadBalancer
+kubectl get svc -n kong
+
+kubectl apply -f client-ingress.yaml
+
+
+helm uninstall kong -n kong
+kubectl get all -n kong
+kubectl delete namespace kong
+kubectl get all --all-namespaces | grep kong
+kubectl delete ingress <ingress-name> -n <namespace>
+
+Troubleshoot:
+kubectl delete validatingwebhookconfiguration ingress-nginx-admission
+
+
+kubectl annotate service auth-service konghq.com/plugins=cors
+kubectl annotate service payment-service konghq.com/plugins=cors
+kubectl annotate service download-service konghq.com/plugins=cors
+
+
+In your Kong Admin API, configure the CORS plugin:
+
+json
+Copy code
+{
+  "name": "cors",
+  "config": {
+    "origins": ["http://web.district12.xyz"],
+    "methods": ["GET", "POST", "PUT", "DELETE"],
+    "headers": ["Accept", "Authorization", "Content-Type"],
+    "credentials": true,
+    "exposed_headers": ["Authorization"],
+    "max_age": 3600
+  }
+}

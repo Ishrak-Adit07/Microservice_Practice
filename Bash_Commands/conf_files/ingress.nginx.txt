@@ -1,0 +1,12 @@
+Install:
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+Verify:
+kubectl get svc -n ingress-nginx
+
+Delete:
+kubectl delete ingress micro-ingress
+kubectl get ingress
+kubectl delete namespace ingress-nginx
+
+kubectl delete svc ingress-nginx-controller -n ingress-nginx

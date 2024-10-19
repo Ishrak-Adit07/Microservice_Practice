@@ -18,6 +18,7 @@ app.options("*", cors(corsOptions));
 
 import mongoose from "mongoose";
 import { mongodbURL } from "./config.js";
+// import { consumeEvents } from "./event_handlers/rmq.sub.js";
 
 console.log("Trying to start mongodb");
 
@@ -25,6 +26,8 @@ mongoose
   .connect(mongodbURL, { dbName: "dfsa" })
   .then(() => {
     console.log("App connected to database");
+
+    // consumeEvents();
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);

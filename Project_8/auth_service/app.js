@@ -25,6 +25,8 @@ mongoose
   .connect(mongodbURL, { dbName: "dfsa" })
   .then(() => {
     console.log("App connected to database");
+
+    createChannel();
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
@@ -33,6 +35,7 @@ mongoose
 
 //Importing the routes
 import userRoute from "./routes/user.route.js";
+import { createChannel } from "./event_handler/rmq.pub.js";
 app.use("/api/user", userRoute);
 
 //Default URL

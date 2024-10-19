@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
 import redisClient from "../redis/redis.client.js";
-import { publishEvent } from "../redis/redis.pub.js";
+import { publishEvent } from "../event_handler/rmq.pub.js";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
@@ -73,11 +73,7 @@ const loginUser = async (req, res) => {
     }
 
     const webToken = createToken(user._id);
-
-    const event = {
-      name
-    };
-    publishEvent("user_events", event);
+    // publishEvent({message: `${name} has logged in`});
 
     return res.status(201).send({ name, webToken });
   } catch (e) {

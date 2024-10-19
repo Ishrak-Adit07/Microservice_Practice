@@ -1,0 +1,14 @@
+Cert Manager:
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.13.0/cert-manager.yaml
+
+kubectl apply -f cluster_issuer.yaml
+kubectl apply -f cluster_issuer_prod.yaml
+
+kubectl apply -f ingress.yaml
+
+kubectl get clusterissuers
+
+kubectl describe certificate district12-tls
+
+kubectl get certificaterequest -n default
+kubectl logs -l app=cert-manager -n cert-manager

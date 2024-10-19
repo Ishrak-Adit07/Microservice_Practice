@@ -45,3 +45,13 @@
 ### 5. Ingress files configured
 ### 6. Fully deployed to cloud, configured and tested
 ### 7. Preflight requests handled
+
+# Project 8
+
+### 1. Project_7
+### 2. Attempt for Inter-Service Communication with asynchronus event driven communication
+
+# Project 9
+
+### 1. Project_7
+### 2. Switched to HTTPS protocol from HTTP

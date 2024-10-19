@@ -69,6 +69,9 @@
 ### 3. Preflight Request Handling and CORS Configuration
 - Implemented CORS policies to properly handle preflight requests, ensuring secure communication between the client and backend services.
 
+### 4. HTTPS Protocol
+- Configured ingress, cluster issuer and cert-manager to switch to https protocol from http
+
 # Features Completed, Pending Testing
 
 ## GitHub Actions
@@ -82,15 +85,12 @@
 ### 1. Load Testing
 - Conduct load testing to validate the system’s scalability and performance under high traffic.
 
-### 2. Internal Kubernetes Database
+### 2. Internal Kubernetes Database and Sharding
 - Plan to migrate MongoDB to an internal Kubernetes deployment with database sharding to demonstrate database scaling within the cluster.
 
 # Additional Features Planned
 
-### 1. Https Protocol
-- Configure ingress to switch to https protocol from current http protocol
-
-### 2. Asynchronus Event-Driven Communication
+### 1. Asynchronus Event-Driven Communication
 - RabbitMQ is used as the message broker for event-driven communication between services.
 - Services publish and consume events to notify other services or respond to specific events asynchronously.
 

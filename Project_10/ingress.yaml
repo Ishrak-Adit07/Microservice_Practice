@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: micro-ingress
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: cors,rate-limiting
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: kong
+  tls:
+    - hosts:
+        - district12.xyz
+        - web.district12.xyz
+      secretName: district12-tls
+  rules:
+    - host: district12.xyz
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 8000
+            annotations:
+              konghq.com/override: auth-ingress-config
+
+          - path: /pay
+            pathType: Prefix
+            backend:
+              service:
+                name: payment-service
+                port:
+                  number: 8001
+            annotations:
+              konghq.com/plugins: jwt-plugin
+
+          - path: /down
+            pathType: Prefix
+            backend:
+              service:
+                name: download-service
+                port:
+                  number: 8002
+            annotations:
+              konghq.com/plugins: jwt-plugin
+
+    - host: web.district12.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-service
+                port:
+                  number: 5173

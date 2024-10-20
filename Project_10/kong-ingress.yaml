@@ -1,0 +1,15 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: auth-ingress-config
+proxy:
+  path: /auth
+  strip_path: true
+route:
+  protocols:
+    - http
+    - https
+  preserve_host: true
+upstream:
+  hash_on: header
+  hash_fallback: cookie

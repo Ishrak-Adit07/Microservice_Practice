@@ -5,16 +5,20 @@ metadata:
   name: auth-vs
 spec:
   hosts:
-  - "auth-service.default.svc.cluster.local"
+    - "auth-service"
   http:
-  - match:
-    - uri:
-        prefix: "/auth"
-    route:
-    - destination:
-        host: auth-service
-        port:
-          number: 8000
+    - match:
+        - uri:
+            prefix: "/auth"
+      route:
+        - destination:
+            host: auth-service
+            port:
+              number: 8000
+      retries:
+        attempts: 3
+        perTryTimeout: 3s
+      timeout: 5s
 ---
 # Payment Service VirtualService
 apiVersion: networking.istio.io/v1alpha3
@@ -23,16 +27,20 @@ metadata:
   name: payment-vs
 spec:
   hosts:
-  - "payment-service.default.svc.cluster.local"
+    - "payment-service"
   http:
-  - match:
-    - uri:
-        prefix: "/pay"
-    route:
-    - destination:
-        host: payment-service
-        port:
-          number: 8001
+    - match:
+        - uri:
+            prefix: "/pay"
+      route:
+        - destination:
+            host: payment-service
+            port:
+              number: 8001
+      retries:
+        attempts: 3
+        perTryTimeout: 3s
+      timeout: 5s
 ---
 # Download Service VirtualService
 apiVersion: networking.istio.io/v1alpha3
@@ -41,13 +49,17 @@ metadata:
   name: download-vs
 spec:
   hosts:
-  - "download-service.default.svc.cluster.local"
+    - "download-service"
   http:
-  - match:
-    - uri:
-        prefix: "/down"
-    route:
-    - destination:
-        host: download-service
-        port:
-          number: 8002
+    - match:
+        - uri:
+            prefix: "/down"
+      route:
+        - destination:
+            host: download-service
+            port:
+              number: 8002
+      retries:
+        attempts: 3
+        perTryTimeout: 3s
+      timeout: 5s

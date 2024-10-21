@@ -2,14 +2,28 @@ apiVersion: configuration.konghq.com/v1
 kind: KongIngress
 metadata:
   name: auth-ingress-config
-proxy:
-  path: /auth
-  strip_path: true
-route:
-  protocols:
-    - http
-    - https
-  preserve_host: true
+upstream:
+  hash_on: header
+  hash_fallback: cookie
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: payment-ingress-config
+upstream:
+  hash_on: header
+  hash_fallback: cookie
+  # connect_timeout: 60000  # Time in milliseconds
+  # read_timeout: 60000
+  # send_timeout: 60000
+  # retries: 2
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: download-ingress-config
 upstream:
   hash_on: header
   hash_fallback: cookie

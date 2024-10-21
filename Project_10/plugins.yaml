@@ -3,7 +3,8 @@ kind: KongPlugin
 metadata:
   name: cors
 config:
-  origins: "*"
+  origins:
+    - "*"
   methods:
     - GET
     - POST
@@ -17,3 +18,11 @@ config:
     - Authorization
   credentials: true
 plugin: cors
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rate-limiting
+config:
+  minute: 10
+plugin: rate-limiting

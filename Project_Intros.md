@@ -55,3 +55,9 @@
 
 ### 1. Project_7
 ### 2. Switched to HTTPS protocol from HTTP
+
+# Project 10
+
+### 1. Project_7
+### 2. Switched to HTTPS protocol from HTTP
+### 3. Attempt of implementation of API gateway

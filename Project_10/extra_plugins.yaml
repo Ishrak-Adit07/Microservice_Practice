@@ -1,0 +1,103 @@
+# jwt-plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: jwt-auth
+config:
+  key_claim_name: iss
+  run_on_preflight: true
+plugin: jwt
+
+---
+# file-log-plugin
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: file-log
+config:
+  path: /usr/local/kong/logs/kong.log
+plugin: file-log
+
+---
+# prometheus
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: prometheus
+plugin: prometheus
+
+---
+# IP-restriction
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: ip-restriction
+config:
+  allow:
+    - 192.168.1.0/24
+plugin: ip-restriction
+
+---
+# response-transformer
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: response-transformer
+config:
+  add:
+    headers:
+      - "X-RateLimit-Limit: 10"
+plugin: response-transformer
+
+---
+# caching
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: cache-auth
+config:
+  strategy: memory
+  content_type:
+    - application/json
+  cache_ttl: 300
+plugin: proxy-cache
+
+---
+# Traffic Splitting
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: canary-ingress
+upstream:
+  targets:
+    - target: new-service:8000
+      weight: 10  # 10% of the traffic to new version
+    - target: old-service:8000
+      weight: 90  # 90% of the traffic to old version
+
+---
+# request-size-limitation
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: request-size-limiting
+config:
+  allowed_payload_size: 2  # Limit to 2MB
+plugin: request-size-limiting
+
+---
+# service mesh
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: kong-gateway
+spec:
+  selector:
+    app: kong
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"

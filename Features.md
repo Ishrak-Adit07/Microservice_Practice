@@ -72,6 +72,10 @@
 ### 4. HTTPS Protocol
 - Configured ingress, cluster issuer and cert-manager to switch to https protocol from http
 
+### 5. API Gateway
+- Configured and managed with Kong
+- Implemented several configurations and plugins(authentication & authorizatoin, rate-limiting, file-log, response-transormer, caching etc.) through extra files
+
 # Features Completed, Pending Testing
 
 ## GitHub Actions
@@ -94,8 +98,5 @@
 - RabbitMQ is used as the message broker for event-driven communication between services.
 - Services publish and consume events to notify other services or respond to specific events asynchronously.
 
-### 2. API Gateway
-- Deploy an API Gateway to centralize routing, authentication, and request management for all microservices, improving security and simplifying external access.
-
-### 3. Service Mesh
+### 2. Service Mesh
 - Implement a service mesh (e.g., Istio or Linkerd) to manage microservice-to-microservice communication, enhancing security, observability, and traffic control.

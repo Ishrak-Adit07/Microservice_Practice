@@ -26,13 +26,19 @@ mongoose
   .connect(mongodbURL, { dbName: "dfsa" })
   .then(() => {
     console.log("App connected to database");
-
-    // consumeEvents();
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
     console.log(err);
   });
+
+// (async () => {
+//   try {
+//     consumeEvents();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// })();
 
 //Importing the routes
 import paymentRoute from "./routes/payment.route.js";
@@ -46,7 +52,7 @@ app.use("/", (req, res) => {
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 export default app;

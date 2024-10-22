@@ -18,7 +18,6 @@ app.options("*", cors(corsOptions));
 
 import mongoose from "mongoose";
 import { mongodbURL } from "./config.js";
-import { createChannel } from "./event_handler/rmq.pub.js";
 
 console.log("Trying to start mongodb");
 
@@ -32,28 +31,19 @@ mongoose
     console.log(err);
   });
 
-(async () => {
-  try {
-    await createChannel();
-  } catch (err) {
-    console.log(err);
-  }
-})();
-
 //Importing the routes
-import userRoute from "./routes/user.route.js";
-app.use("/api/user", userRoute);
+import paymentRoute from "./routes/payment.route.js";
+app.use("/api/payment", paymentRoute);
 
 //Default URL
 app.use("/", (req, res) => {
-  console.log("Inside the default url! :(");
-  res.status(500).send("Invalid URL!");
+  res.send("Invalid URL!");
 });
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send('Something broke!');
 });
 
 export default app;

@@ -1,19 +1,18 @@
 import amqp from 'amqplib';
 import { Payment } from '../models/payment.model';
 
-async function consumeEvents() {
+async function connectToRabbitMQ() {
+  const amp_url = process.env.RABBITMQ_URL || 'amqp://rabbitmq-service:5672';
+
   try {
-    // Use the RabbitMQ service name and port in Kubernetes
-    const amp_url = process.env.RABBITMQ_URL || 'amqp://rabbitmq-service:5672';
     const connection = await amqp.connect(amp_url);
     const channel = await connection.createChannel();
-
     const queue = 'user_events';
 
-    // Assert the queue to ensure it exists and is durable
     await channel.assertQueue(queue, { durable: true });
 
-    // Start consuming messages from the queue
+    console.log("Connected to RabbitMQ, listening for messages...");
+
     channel.consume(queue, async (message) => {
       if (message !== null) {
         try {
@@ -21,24 +20,41 @@ async function consumeEvents() {
 
           // Process the event
           if (eventData.type === 'USER_REGISTERED') {
-            // Handle the event (e.g., user registration)
             console.log("Handling user registered event:", eventData);
 
             // Example action: Creating a payment record
             await Payment.create({
-              name: "Jon Snow", 
-              payment: 110
+              name: eventData.username || "Unknown",
+              payment: 110 // Example static payment value, change if needed
             });
 
-            channel.ack(message);
+            channel.ack(message); // Acknowledge successful processing
           }
         } catch (error) {
           console.error('Error processing message:', error);
+          channel.nack(message, false, true); // Reject and requeue message
         }
       }
     });
+
+    return { connection, channel };
   } catch (error) {
-    console.error('Error consuming message:', error);
+    console.error('Error connecting to RabbitMQ:', error);
+    throw error;
+  }
+}
+
+async function consumeEvents() {
+  let connected = false;
+
+  while (!connected) {
+    try {
+      await connectToRabbitMQ();
+      connected = true;
+    } catch (error) {
+      console.error("Failed to connect to RabbitMQ. Retrying in 5 seconds...");
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Retry after 5 seconds
+    }
   }
 }
 

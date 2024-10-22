@@ -45,7 +45,7 @@
 ## Monitoring
 
 ### 1. Metrics Monitoring
-- Prometheus and Grafana are integrated to monitor the health and performance of the system locally, for a node server, providing insights into resource utilization and metrics.
+- Prometheus and Grafana are integrated to monitor the health and performance of the system locally, for a node server, providing insights into resource utilization and metrics
 
 ### 1. HPA Monitoring
 - HPA Configuration and status can be monitored from k8s terminal.
@@ -72,9 +72,12 @@
 ### 4. HTTPS Protocol
 - Configured ingress, cluster issuer and cert-manager to switch to https protocol from http
 
-### 5. API Gateway
+### 5. External API Gateway
 - Configured and managed with Kong
 - Implemented several configurations and plugins(authentication & authorizatoin, rate-limiting, file-log, response-transormer, caching etc.) through extra files
+
+### 6. Internal API Gateway
+- Configured and managed with istio, through kong
 
 # Features Completed, Pending Testing
 
@@ -97,6 +100,3 @@
 ### 1. Asynchronus Event-Driven Communication
 - RabbitMQ is used as the message broker for event-driven communication between services.
 - Services publish and consume events to notify other services or respond to specific events asynchronously.
-
-### 2. Service Mesh
-- Implement a service mesh (e.g., Istio or Linkerd) to manage microservice-to-microservice communication, enhancing security, observability, and traffic control.

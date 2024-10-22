@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
 import redisClient from "../redis/redis.client.js";
-import { publishEvent } from "../event_handler/rmq.pub.js";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
@@ -31,14 +30,7 @@ const registerUser = async (req, res) => {
     const webToken = createToken(user._id);
 
     // Cache the new user data
-    await redisClient.set(`user:${user._id}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
-
-    const eventData = {
-      type: "USER_REGISTERED",
-      name: "Jon Snow",
-      paymentAmount: 110,
-    };
-    publishEvent(eventData);
+    await redisClient.set(`user:${user._id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
 
     return res.status(201).send({ name, webToken });
   } catch (e) {
@@ -70,7 +62,7 @@ const loginUser = async (req, res) => {
       }
 
       // Cache the user data
-      await redisClient.set(`user:${name}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
+      await redisClient.set(`user:${name}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
     }
 
     // Validate password
@@ -80,7 +72,6 @@ const loginUser = async (req, res) => {
     }
 
     const webToken = createToken(user._id);
-
     return res.status(201).send({ name, webToken });
   } catch (e) {
     return res.status(500).send({ error: e.message });
@@ -105,7 +96,7 @@ const getUserByID = async (req, res) => {
     }
 
     // Cache the user data
-    await redisClient.set(`user:${id}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
+    await redisClient.set(`user:${id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
 
     return res.status(200).send(user);
   } catch (e) {
@@ -131,7 +122,7 @@ const validateUserByID = async (req, res) => {
     }
 
     // Cache the user data
-    await redisClient.set(`user:${id}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
+    await redisClient.set(`user:${id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
 
     return res.status(200).send({ user });
   } catch (e) {

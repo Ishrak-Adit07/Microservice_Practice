@@ -3,7 +3,7 @@ import request from "supertest";
 import mongoose from "mongoose";
 import { mongodbURL } from "../config.js";
 
-const baseURL = "https://district12.xyz/auth";
+const baseURL = "https://district12.xyz/down";
 
 describe("API Endpoint Tests", () => {
   beforeAll(async () => {

@@ -1,18 +1,39 @@
 import request from "supertest";
-// import app from "../app.js";
 import mongoose from "mongoose";
 import { mongodbURL } from "../config.js";
 
 const baseURL = "https://district12.xyz/pay";
+const authBaseURL = "https://district12.xyz/auth";
 
 describe("API Endpoint Tests", () => {
+  let webToken;
+
   beforeAll(async () => {
     // Connect to MongoDB before running the tests
     await mongoose.connect(mongodbURL, { dbName: "dfsa" });
+
+    // Perform login to retrieve webToken
+    const validLoginUser = {
+      name: "Jon Snow",
+      password: "jon"
+    };
+
+    const loginResponse = await request(authBaseURL)
+      .post("/api/user/login")
+      .send(validLoginUser);
+
+    expect(loginResponse.statusCode).toBe(201);
+    expect(loginResponse.body).toHaveProperty("webToken");
+
+    webToken = loginResponse.body.webToken;
   });
 
   const postPaymentRequest = (paymentData) =>
-    request(baseURL).post("/api/payment/make").send(paymentData);
+    request(baseURL)
+      .post("/api/payment/make")
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${webToken}`)
+      .send(paymentData);
 
   it("should return success message for POST /api/payment/make with valid name and payment", async () => {
     const validPaymentData = {
@@ -24,14 +45,8 @@ describe("API Endpoint Tests", () => {
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty("payment_done");
-    expect(response.body.payment_done).toHaveProperty(
-      "name",
-      validPaymentData.name
-    );
-    expect(response.body.payment_done).toHaveProperty(
-      "payment",
-      validPaymentData.payment
-    );
+    expect(response.body.payment_done).toHaveProperty("name", validPaymentData.name);
+    expect(response.body.payment_done).toHaveProperty("payment", validPaymentData.payment);
   });
 
   it("should return 400 error for POST /api/payment/make with missing fields", async () => {

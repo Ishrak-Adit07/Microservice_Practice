@@ -1,7 +1,9 @@
 import request from "supertest";
-import app from "../app.js";
+// import app from "../app.js";
 import mongoose from "mongoose";
 import { mongodbURL } from "../config.js";
+
+const baseURL = "https://district12.xyz/auth";
 
 describe("API Endpoint Tests", () => {
   beforeAll(async () => {
@@ -10,7 +12,7 @@ describe("API Endpoint Tests", () => {
   });
 
   const postPaymentRequest = (paymentData) =>
-    request(app).post("/api/payment/make").send(paymentData);
+    request(baseURL).post("/api/payment/make").send(paymentData);
 
   it("should return success message for POST /api/payment/make with valid name and payment", async () => {
     const validPaymentData = {

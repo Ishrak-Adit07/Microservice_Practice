@@ -1,7 +1,9 @@
 import request from "supertest";
-import app from "../app.js";
+// import app from "../app.js";
 import mongoose from "mongoose";
 import { mongodbURL } from "../config.js";
+
+const baseURL = "https://district12.xyz/auth";
 
 describe("API Endpoint Tests", () => {
   beforeAll(async () => {
@@ -9,7 +11,7 @@ describe("API Endpoint Tests", () => {
     await mongoose.connect(mongodbURL, { dbName: "dfsa" });
   });
 
-  const postDownloadRequest = (userData) => request(app).post("/api/download/make").send(userData);
+  const postDownloadRequest = (userData) => request(baseURL).post("/api/download/make").send(userData);
 
   it("should return success message for POST /api/download/make with valid name", async () => {
     const validUser = {

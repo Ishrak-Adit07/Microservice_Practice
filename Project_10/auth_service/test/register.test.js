@@ -1,8 +1,10 @@
 import request from "supertest";
-import app from "../app.js";
+// import app from "../app.js";
 import mongoose from "mongoose";
 import { mongodbURL } from "../config.js";
-import { User } from "../models/user.model.js";
+// import { User } from "../models/user.model.js";
+
+const baseURL = "https://district12.xyz/auth";
 
 describe("User Registration Endpoint Tests", () => {
   beforeAll(async () => {
@@ -10,7 +12,7 @@ describe("User Registration Endpoint Tests", () => {
     await mongoose.connect(mongodbURL, { dbName: "dfsa" });
   });
 
-  const postRegisterRequest = (userData) => request(app).post("/api/user/register").send(userData);
+  const postRegisterRequest = (userData) => request(baseURL).post("/api/user/register").send(userData);
 
   it("should return success message for POST /api/user/register with valid data", async () => {
     const validUser = {

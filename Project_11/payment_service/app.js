@@ -31,6 +31,9 @@ mongoose
     console.log(err);
   });
 
+import { consumeMessages } from "./async_com/consumer.js";
+consumeMessages("user-logins");
+
 // Prometheus
 import promMid from "express-prometheus-middleware";
 app.use(

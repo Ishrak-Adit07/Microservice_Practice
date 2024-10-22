@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
 import redisClient from "../redis/redis.client.js";
+import { sendMessage } from "../async_com/producer.js";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
@@ -70,6 +71,11 @@ const loginUser = async (req, res) => {
     if (!match) {
       return res.status(401).send({ error: "Invalid credentials" });
     }
+
+    const userData = {
+      name
+    }
+    await sendMessage('user-logins', JSON.stringify(userData));
 
     const webToken = createToken(user._id);
     return res.status(201).send({ name, webToken });

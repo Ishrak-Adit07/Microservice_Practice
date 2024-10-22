@@ -9,7 +9,7 @@ import cors from "cors";
 const corsOptions = {
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
 
@@ -31,6 +31,18 @@ mongoose
     console.log(err);
   });
 
+// Prometheus
+import promMid from "express-prometheus-middleware";
+app.use(
+  promMid({
+    metricsPath: "/metrics",
+    collectDefaultMetrics: true,
+    requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+    requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+    responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+  })
+);
+
 //Importing the routes
 import paymentRoute from "./routes/payment.route.js";
 app.use("/api/payment", paymentRoute);
@@ -43,7 +55,7 @@ app.use("/", (req, res) => {
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 export default app;

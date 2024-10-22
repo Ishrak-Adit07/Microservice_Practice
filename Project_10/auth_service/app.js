@@ -1,8 +1,6 @@
 import express from "express";
 const app = express();
 
-// const promMid = require('express-prometheus-middleware');
-
 // For parsing json
 app.use(express.json());
 

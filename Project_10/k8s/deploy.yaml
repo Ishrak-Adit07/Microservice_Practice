@@ -86,8 +86,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: auth-service
-  annotations:
-    konghq.com/plugins: cors, rate-limiting
 spec:
   selector:
     app: auth
@@ -176,8 +174,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: payment-service
-  annotations:
-    konghq.com/plugins: cors, rate-limiting
 spec:
   selector:
     app: payment
@@ -233,26 +229,6 @@ spec:
               value: "cluster-for-ishrak"
             - name: MONGODB_APP_NAME
               value: "cluster-for-ishrak"
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_HOST
-            - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_PORT
-            - name: RABBITMQ_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: RABBITMQ_URL
-            - name: RABBITMQ_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: RABBITMQ_PORT
           resources:
             requests:
               cpu: "200m"
@@ -266,8 +242,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: download-service
-  annotations:
-    konghq.com/plugins: cors, rate-limiting
 spec:
   selector:
     app: download
@@ -303,22 +277,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 5173
-          env:
-            - name: VITE_AUTH_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_AUTH_API_URL
-            - name: VITE_PAYMENT_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_PAYMENT_API_URL
-            - name: VITE_DOWNLOAD_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_DOWNLOAD_API_URL
           resources:
             requests:
               cpu: "200m"

@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import "dotenv/config.js";
 
 const redisClient = new Redis({
   host: process.env.REDIS_HOST || 'redis',

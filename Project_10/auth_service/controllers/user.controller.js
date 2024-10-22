@@ -130,4 +130,15 @@ const validateUserByID = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, getUserByID, validateUserByID };
+const testAuth = async (req, res) => {
+
+  try {
+
+    return res.status(201).send({ message: "Hello from auth service" });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send({ error: e.message });
+  }
+};
+
+export { registerUser, loginUser, getUserByID, validateUserByID, testAuth };

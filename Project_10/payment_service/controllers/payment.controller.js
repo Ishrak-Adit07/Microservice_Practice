@@ -18,4 +18,15 @@ const makePayment = async (req, res) => {
   }
 };
 
-export { makePayment };
+const testPayment = async (req, res) => {
+
+  try {
+
+    return res.status(201).send({ message: "Hello from payment service" });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send({ error: e.message });
+  }
+};
+
+export { makePayment, testPayment };

@@ -1,5 +1,5 @@
-# Auth service Dockerfile
-FROM node:20-alpine
+# Use the full Debian-based Node image
+FROM node:20
 
 WORKDIR /app
 

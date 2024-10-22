@@ -25,4 +25,15 @@ const makeDownload = async (req, res) => {
   }
 };
 
-export { makeDownload };
+const testDownload = async (req, res) => {
+
+  try {
+
+    return res.status(201).send({ message: "Hello from download service" });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send({ error: e.message });
+  }
+};
+
+export { makeDownload, testDownload };

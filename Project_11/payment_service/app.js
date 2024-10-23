@@ -31,8 +31,20 @@ mongoose
     console.log(err);
   });
 
-import { consumeMessages } from "./async_com/consumer.js";
-consumeMessages("user-logins");
+// Subscribing to messages
+import { startConsumer } from "./async_com/rmq.sub.js";
+
+async function handleMessage(data) {
+  // Process your message here
+  // This will run in a non-blocking way
+  if (data.action === "USER_REGISTERED") {
+    // Do something with the data
+    console.log("Processing user registration:", data);
+  }
+}
+
+// Start the consumer
+startConsumer(handleMessage).catch(console.error);
 
 // Prometheus
 import promMid from "express-prometheus-middleware";

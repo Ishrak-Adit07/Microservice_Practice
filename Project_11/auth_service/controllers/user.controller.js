@@ -3,7 +3,22 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
 import redisClient from "../redis/redis.client.js";
-import { sendMessage } from "../async_com/producer.js";
+import { publishMessage } from "../async_com/rmq.pub.js";
+
+// Publishing messages
+
+async function sendEvent(data) {
+  try {
+    await publishMessage({
+      action: "USER_REGISTERED",
+      data,
+      timestamp: new Date().toISOString()
+    });
+    console.log("Message sent successfully");
+  } catch (error) {
+    console.error("Failed to send message:", error);
+  }
+}
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
@@ -31,7 +46,7 @@ const registerUser = async (req, res) => {
     const webToken = createToken(user._id);
 
     // Cache the new user data
-    await redisClient.set(`user:${user._id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
+    await redisClient.set(`user:${user._id}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
 
     return res.status(201).send({ name, webToken });
   } catch (e) {
@@ -63,7 +78,7 @@ const loginUser = async (req, res) => {
       }
 
       // Cache the user data
-      await redisClient.set(`user:${name}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
+      await redisClient.set(`user:${name}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
     }
 
     // Validate password
@@ -72,10 +87,12 @@ const loginUser = async (req, res) => {
       return res.status(401).send({ error: "Invalid credentials" });
     }
 
-    const userData = {
-      name
-    }
-    await sendMessage('user-logins', JSON.stringify(userData));
+    const userEvent = {
+      userId: "123",
+      action: "USER_REGISTERED",
+    };
+
+    sendEvent(userEvent);
 
     const webToken = createToken(user._id);
     return res.status(201).send({ name, webToken });
@@ -102,7 +119,7 @@ const getUserByID = async (req, res) => {
     }
 
     // Cache the user data
-    await redisClient.set(`user:${id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
+    await redisClient.set(`user:${id}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
 
     return res.status(200).send(user);
   } catch (e) {
@@ -128,7 +145,7 @@ const validateUserByID = async (req, res) => {
     }
 
     // Cache the user data
-    await redisClient.set(`user:${id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
+    await redisClient.set(`user:${id}`, JSON.stringify(user), "EX", 3600); // 1 hour expiration
 
     return res.status(200).send({ user });
   } catch (e) {
@@ -137,9 +154,7 @@ const validateUserByID = async (req, res) => {
 };
 
 const testAuth = async (req, res) => {
-
   try {
-
     return res.status(201).send({ message: "Hello from auth service" });
   } catch (e) {
     console.error(e);

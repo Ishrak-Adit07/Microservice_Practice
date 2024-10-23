@@ -1,13 +1,24 @@
-const { Pool } = require("pg"); // Make sure to import the Pool class from the 'pg' module
+import pkg from "pg";
+const { Pool } = pkg;
 
-// Create a new pool using the provided connection parameters
+import fs from "fs";
+import path from "path";
+import "dotenv/config.js";
+
+const caCertificatePath = "./database/ca-certificate.crt";
+const caCertificate = fs
+  .readFileSync(path.resolve(caCertificatePath))
+  .toString();
+
 const pool = new Pool({
-  connectionString: `postgresql://doadmin:${process.env.POSTGRES_PASSWORD}@template-pg-do-user-18003520-0.g.db.ondigitalocean.com:25061/template-pool?sslmode=require`,
+  connectionString: `postgresql://doadmin:${process.env.POSTGRES_PASSWORD}@template-pg-do-user-18003520-0.g.db.ondigitalocean.com:25061/template-pool`,
   ssl: {
-    rejectUnauthorized: false, // Adjust based on your SSL requirements
-    require: true, // This indicates that SSL is required
-  },
+    rejectUnauthorized: true,
+    ca: caCertificate,
+    // Add these additional SSL parameters
+    checkServerIdentity: () => undefined, // Bypass hostname checks
+    servername: "template-pg-do-user-18003520-0.g.db.ondigitalocean.com"
+  }
 });
 
-// Export the pool for use in your application
-module.exports = pool;
+export { pool };

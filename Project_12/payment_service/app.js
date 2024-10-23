@@ -1,5 +1,6 @@
 import express from "express";
 const app = express();
+import pool from "./database/pool.js";
 
 // For parsing json
 app.use(express.json());
@@ -9,28 +10,24 @@ import cors from "cors";
 const corsOptions = {
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
 
 // Handle preflight requests
 app.options("*", cors(corsOptions));
 
-import mongoose from "mongoose";
-import { mongodbURL } from "./config.js";
+// Log when attempting to start PostgreSQL
+console.log("Trying to connect to PostgreSQL");
 
-console.log("Trying to start mongodb");
-
-mongoose
-  .connect(mongodbURL, { dbName: "dfsa" })
-  .then(() => {
-    console.log("App connected to database");
-  })
-  .catch((err) => {
-    console.error("Failed to connect to MongoDB", err);
-    console.log(err);
-  });
-
+// Check the PostgreSQL connection
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error("Error acquiring client", err.stack);
+  }
+  console.log("Connected to PostgreSQL pool");
+  release(); // release the client back to the pool
+});
 //Importing the routes
 import paymentRoute from "./routes/payment.route.js";
 app.use("/api/payment", paymentRoute);
@@ -43,7 +40,7 @@ app.use("/", (req, res) => {
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 export default app;

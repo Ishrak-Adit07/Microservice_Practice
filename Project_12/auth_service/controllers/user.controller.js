@@ -1,8 +1,8 @@
-import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
 import redisClient from "../redis/redis.client.js";
+import pool from "../database/pool.js";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
@@ -18,21 +18,30 @@ const registerUser = async (req, res) => {
       return res.status(400).send({ error: "All fields are required" });
     }
 
-    const exist = await User.findOne({ name });
-    if (exist) {
+    // Check if user already exists in the database
+    const existQuery = `SELECT * FROM users WHERE name = $1`;
+    const existResult = await pool.query(existQuery, [name]);
+    if (existResult.rows.length > 0) {
       return res.status(409).send({ error: "Name is already in use" });
     }
 
+    // Hash the password and insert the new user
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-    const user = await User.create({ name, password: hashedPassword });
+    const insertUserQuery = `
+      INSERT INTO users (name, password) 
+      VALUES ($1, $2) 
+      RETURNING id, name;
+    `;
+    const result = await pool.query(insertUserQuery, [name, hashedPassword]);
+    const user = result.rows[0];
 
-    const webToken = createToken(user._id);
+    const webToken = createToken(user.id);
 
-    // Cache the new user data
-    await redisClient.set(`user:${user._id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
+    // Cache the new user data in Redis
+    await redisClient.set(`user:${user.id}`, JSON.stringify(user), 'EX', 3600); // 1 hour expiration
 
-    return res.status(201).send({ name, webToken });
+    return res.status(201).send({ name: user.name, webToken });
   } catch (e) {
     return res.status(500).send({ error: e.message });
   }
@@ -55,8 +64,10 @@ const loginUser = async (req, res) => {
       // Parse cached user data
       user = JSON.parse(cachedUser);
     } else {
-      // Fallback to MongoDB if cache miss
-      user = await User.findOne({ name });
+      // Fallback to PostgreSQL if cache miss
+      const query = `SELECT * FROM users WHERE name = $1`;
+      const result = await pool.query(query, [name]);
+      user = result.rows[0];
       if (!user) {
         return res.status(404).send({ error: "No such name found" });
       }
@@ -71,8 +82,8 @@ const loginUser = async (req, res) => {
       return res.status(401).send({ error: "Invalid credentials" });
     }
 
-    const webToken = createToken(user._id);
-    return res.status(201).send({ name, webToken });
+    const webToken = createToken(user.id);
+    return res.status(201).send({ name: user.name, webToken });
   } catch (e) {
     return res.status(500).send({ error: e.message });
   }
@@ -89,8 +100,10 @@ const getUserByID = async (req, res) => {
       return res.status(200).send(JSON.parse(cachedUser));
     }
 
-    // If not in cache, get user from MongoDB
-    const user = await User.findById(id).select("_id");
+    // If not in cache, get user from PostgreSQL
+    const query = `SELECT id, name FROM users WHERE id = $1`;
+    const result = await pool.query(query, [id]);
+    const user = result.rows[0];
     if (!user) {
       return res.status(404).send({ error: "No such id found" });
     }
@@ -115,8 +128,10 @@ const validateUserByID = async (req, res) => {
       return res.status(200).send({ user: JSON.parse(cachedUser) });
     }
 
-    // If not in cache, get user from MongoDB
-    const user = await User.findById(id).select("_id");
+    // If not in cache, get user from PostgreSQL
+    const query = `SELECT id, name FROM users WHERE id = $1`;
+    const result = await pool.query(query, [id]);
+    const user = result.rows[0];
     if (!user) {
       return res.status(404).send({ error: "No such id found" });
     }

@@ -1,25 +1,37 @@
-# ConfigMap for API URLs
+# ConfigMap for API URLs and Redis/Database Configuration
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: api-urls
+  name: template-config
 data:
-  VITE_AUTH_API_URL: "http://district12.xyz/auth"
-  VITE_PAYMENT_API_URL: "http://district12.xyz/pay"
-  VITE_DOWNLOAD_API_URL: "http://district12.xyz/down"
+  VITE_AUTH_API_URL: "https://district12.xyz/auth"
+  VITE_PAYMENT_API_URL: "https://district12.xyz/pay"
+  VITE_DOWNLOAD_API_URL: "https://district12.xyz/down"
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
+  POSTGRES_HOST: "template-pg-do-user-18003520-0.g.db.ondigitalocean.com"
+  POSTGRES_PORT: "25060"
+  POSTGRES_DB: "defaultdb"
+  POSTGRES_USER: "doadmin"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+type: Opaque
+data:
+  POSTGRES_PASSWORD: QVZOU19XdW5kSDhpM2hIdFZJblRLZFhr
 ---
 # auth-service Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-deploy
+  name: auth-deploypg
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: authpg
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -28,39 +40,19 @@ spec:
   template:
     metadata:
       labels:
-        app: auth
+        app: authpg
     spec:
       containers:
-        - name: auth-service
-          image: ishrakadit07/auth_service
+        - name: auth-servicepg
+          image: ishrakadit07/auth_servicepg
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
-          env:
-            - name: MONGODB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-atlas-secret
-                  key: mongo-user
-            - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-atlas-secret
-                  key: mongo-password
-            - name: MONGODB_CLUSTER_NAME
-              value: "cluster-for-ishrak"
-            - name: MONGODB_APP_NAME
-              value: "cluster-for-ishrak"
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_HOST
-            - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_PORT
+          envFrom:
+            - configMapRef:
+                name: template-config
+            - secretRef:
+                name: postgres-secret
           resources:
             requests:
               cpu: "200m"
@@ -73,10 +65,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
+  name: auth-servicepg
 spec:
   selector:
-    app: auth
+    app: authpg
   ports:
     - protocol: TCP
       port: 8000
@@ -87,12 +79,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-deploy
+  name: payment-deploypg
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: payment
+      app: paymentpg
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -101,44 +93,19 @@ spec:
   template:
     metadata:
       labels:
-        app: payment
+        app: paymentpg
     spec:
       containers:
-        - name: payment-service
-          image: ishrakadit07/payment_service
+        - name: payment-servicepg
+          image: ishrakadit07/payment_servicepg
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
-          env:
-            - name: AUTH_SERVICE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_AUTH_API_URL
-            - name: MONGODB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-atlas-secret
-                  key: mongo-user
-            - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-atlas-secret
-                  key: mongo-password
-            - name: MONGODB_CLUSTER_NAME
-              value: "cluster-for-ishrak"
-            - name: MONGODB_APP_NAME
-              value: "cluster-for-ishrak"
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_HOST
-            - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_PORT
+          envFrom:
+            - configMapRef:
+                name: template-config
+            - secretRef:
+                name: postgres-secret
           resources:
             requests:
               cpu: "200m"
@@ -151,104 +118,26 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: payment-service
+  name: payment-servicepg
 spec:
   selector:
-    app: payment
+    app: paymentpg
   ports:
     - protocol: TCP
       port: 8001
       targetPort: 8001
   type: ClusterIP
 ---
-# download-service Deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: download-deploy
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: download
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-  template:
-    metadata:
-      labels:
-        app: download
-    spec:
-      containers:
-        - name: download-service
-          image: ishrakadit07/download_service
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8002
-          env:
-            - name: AUTH_SERVICE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_AUTH_API_URL
-            - name: MONGODB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-atlas-secret
-                  key: mongo-user
-            - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-atlas-secret
-                  key: mongo-password
-            - name: MONGODB_CLUSTER_NAME
-              value: "cluster-for-ishrak"
-            - name: MONGODB_APP_NAME
-              value: "cluster-for-ishrak"
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_HOST
-            - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: REDIS_PORT
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
----
-# download-service Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: download-service
-spec:
-  selector:
-    app: download
-  ports:
-    - protocol: TCP
-      port: 8002
-      targetPort: 8002
-  type: ClusterIP
----
 # client Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-deploy
+  name: client-deploypg
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client
+      app: clientpg
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -257,30 +146,19 @@ spec:
   template:
     metadata:
       labels:
-        app: client
+        app: clientpg
     spec:
       containers:
-        - name: client
+        - name: clientpg
           image: ishrakadit07/project_web
           imagePullPolicy: Always
           ports:
             - containerPort: 5173
-          env:
-            - name: VITE_AUTH_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_AUTH_API_URL
-            - name: VITE_PAYMENT_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_PAYMENT_API_URL
-            - name: VITE_DOWNLOAD_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: api-urls
-                  key: VITE_DOWNLOAD_API_URL
+          envFrom:
+            - configMapRef:
+                name: template-config
+            - secretRef:
+                name: postgres-secret
           resources:
             requests:
               cpu: "200m"
@@ -293,7 +171,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-service
+  name: client-servicepg
 spec:
   type: ClusterIP
   ports:
@@ -301,60 +179,4 @@ spec:
       targetPort: 5173
       protocol: TCP
   selector:
-    app: client
---- 
-# Horizontal Pod Autoscaler for auth-service
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: auth-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: auth-deploy
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
----
-# Horizontal Pod Autoscaler for payment-service
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: payment-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: payment-deploy
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
----
-# Horizontal Pod Autoscaler for download-service
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: download-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: download-deploy
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
----
-# Horizontal Pod Autoscaler for client
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: client-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: client-deploy
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
+    app: clientpg

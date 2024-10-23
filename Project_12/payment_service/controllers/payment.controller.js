@@ -1,5 +1,5 @@
-import { Payment } from "../models/payment.model.js";
 import "dotenv/config.js";
+import pool from '../database/pool.js';
 
 const makePayment = async (req, res) => {
   const { name, payment } = req.body;
@@ -9,7 +9,13 @@ const makePayment = async (req, res) => {
       return res.status(400).send({ error: "All fields are required" });
     }
 
-    const payment_done = await Payment.create({ name, payment });
+    // Use a database query to insert the payment record
+    const result = await pool.query(
+      'INSERT INTO payments (name, payment) VALUES ($1, $2) RETURNING *',
+      [name, payment]
+    );
+
+    const payment_done = result.rows[0]; // Get the inserted payment record
 
     return res.status(201).send({ payment_done });
   } catch (e) {

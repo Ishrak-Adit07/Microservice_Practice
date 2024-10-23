@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-import pool from "./database/pool.js";
+import {pool} from "./database/pool.js";
 
 // For parsing json
 app.use(express.json());

@@ -15,8 +15,7 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: true,
     ca: caCertificate,
-    // Add these additional SSL parameters
-    checkServerIdentity: () => undefined, // Bypass hostname checks
+    checkServerIdentity: () => undefined,
     servername: "template-pg-do-user-18003520-0.g.db.ondigitalocean.com"
   }
 });

@@ -1,5 +1,5 @@
 import "dotenv/config.js";
-import pool from '../database/pool.js';
+import {pool} from '../database/pool.js';
 
 const makePayment = async (req, res) => {
   const { name, payment } = req.body;

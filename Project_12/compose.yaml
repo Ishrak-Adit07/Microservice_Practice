@@ -11,8 +11,7 @@ services:
       VITE_AUTH_API_URL: http://localhost:8000
       VITE_PAYMENT_API_URL: http://localhost:8001
       VITE_DOWNLOAD_API_URL: http://localhost:8002
-    networks:
-      - dfsa-network
+
     develop:
       watch:
         - path: ./client/package.json
@@ -25,12 +24,7 @@ services:
           
   auth-service:
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      db:
-        condition: service_started
+      - db
     build: ./auth_service
     ports: 
       - 8000:8000
@@ -38,11 +32,7 @@ services:
       DB_URL: mongodb://db/dfsa
       PAYMENT_SERVICE_URL: http://payment-service:8001
       DOWNLOAD_SERVICE_URL: http://download-service:8002
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
-    networks:
-      - dfsa-network
+
     develop:
       watch:
         - path: ./auth_service/package.json
@@ -55,12 +45,7 @@ services:
 
   payment-service:
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      db:
-        condition: service_started
+      - db
     build: ./payment_service
     ports: 
       - 8001:8001
@@ -68,11 +53,7 @@ services:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
       DOWNLOAD_SERVICE_URL: http://download-service:8002
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
-    networks:
-      - dfsa-network
+
     develop:
       watch:
         - path: ./payment_service/package.json
@@ -85,12 +66,7 @@ services:
 
   download-service:
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      db:
-        condition: service_started
+      - db
     build: ./download_service
     ports: 
       - 8002:8002
@@ -98,11 +74,7 @@ services:
       DB_URL: mongodb://db/dfsa
       AUTH_SERVICE_URL: http://auth-service:8000
       PAYMENT_SERVICE_URL: http://payment-service:8001
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
-    networks:
-      - dfsa-network
+
     develop:
       watch:
         - path: ./download_service/package.json
@@ -119,48 +91,6 @@ services:
       - 27017:27017
     volumes:
       - dfsa:/data/db
-    networks:
-      - dfsa-network
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-  redis:
-    image: redis:alpine
-    ports:
-      - 6379:6379
-    networks:
-      - dfsa-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - 5672:5672
-      - 15672:15672  # Management UI accessible on localhost:15672
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
-    networks:
-      - dfsa-network
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   dfsa:
-  rabbitmq_data:
-
-networks:
-  dfsa-network:
-    driver: bridge

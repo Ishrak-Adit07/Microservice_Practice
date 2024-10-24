@@ -1,0 +1,34 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: auth-ingress-config
+upstream:
+  hash_on: header
+  hash_fallback: cookie
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: train-ingress-config
+upstream:
+  hash_on: header
+  hash_fallback: cookie
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: ticket-ingress-config
+upstream:
+  hash_on: header
+  hash_fallback: cookie
+
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongIngress
+metadata:
+  name: price-ingress-config
+upstream:
+  hash_on: header
+  hash_fallback: cookie

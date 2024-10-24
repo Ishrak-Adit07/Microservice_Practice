@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bcf-ingress
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: http,https
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    konghq.com/override: auth-ingress-config, train-ingress-config, ticket-ingress-config, price-ingress-config
+spec:
+  ingressClassName: kong
+  tls:
+    - hosts:
+        # - district12.xyz
+        - server.district12.xyz
+      secretName: district12-tls
+  rules:
+    - host: server.district12.xyz
+      http:
+        paths:
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: tick12-auth-service
+                port:
+                  number: 8000
+
+          - path: /ticket
+            pathType: Prefix
+            backend:
+              service:
+                name: tick12-ticket-service
+                port:
+                  number: 8001
+
+          - path: /train
+            pathType: Prefix
+            backend:
+              service:
+                name: tick12-train-service
+                port:
+                  number: 8002
+
+          - path: /price
+            pathType: Prefix
+            backend:
+              service:
+                name: tick12-price-service
+                port:
+                  number: 8003

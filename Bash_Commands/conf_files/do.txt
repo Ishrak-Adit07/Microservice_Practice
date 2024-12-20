@@ -1,5 +1,6 @@
 doctl version
 doctl kubernetes cluster kubeconfig save 1a474e12-fa3e-4dfb-bd48-0e1bb6faae19
+doctl kubernetes cluster kubeconfig save do-sgp1-micro-redis-1
 
 doctl kubernetes cluster kubeconfig show <753ca0e2-704c-4f40-9eb4-52418ecf15ac|devops1-cluster>
 doctl kubernetes cluster kubeconfig show 1a474e12-fa3e-4dfb-bd48-0e1bb6faae19
